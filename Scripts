@@ -1,0 +1,108 @@
+USE TechStore;
+GO
+INSERT INTO Categoria (Nome_Categoria) VALUES
+('Eletrônicos'),
+('Periféricos'),
+('Celulares');
+
+INSERT INTO Produto (Nome_Produto, Preco, Estoque, ID_Categoria) VALUES
+('Mouse Gamer RGB', 79.90, 120, 2),
+('Teclado Mecânico', 199.90, 80, 2),
+('Smartphone X200', 1499.90, 50, 3),
+('Fone Bluetooth Pro', 249.90, 110, 1);
+
+INSERT INTO Cliente (Nome, Email, Telefone) VALUES
+('Ana Silva', 'ana@gmail.com', '11988887777'),
+('Carlos Souza', 'carlos@hotmail.com', '11999996666'),
+('Pedro Henrique', 'pedro@gmail.com', '11977775555');
+
+INSERT INTO Pedido (ID_Cliente, Data_Pedido, Valor_Total) VALUES
+(1, '2024-10-15', 279.80),
+(2, '2024-10-18', 1499.90);
+
+INSERT INTO Pagamento (ID_Pedido, Tipo, Status) VALUES
+(1, 'Cartão de Crédito', 'Aprovado'),
+(2, 'PIX', 'Aprovado');
+
+INSERT INTO Item_Pedido (ID_Pedido, ID_Produto, Quantidade, Subtotal) VALUES
+(1, 1, 2, 159.80),
+(1, 2, 1, 120.00),
+(2, 3, 1, 1499.90);
+
+
+
+
+USE TechStore;
+GO
+
+SELECT * FROM Categoria;
+SELECT * FROM Produto;
+SELECT * FROM Cliente;
+SELECT * FROM Pedido;
+SELECT * FROM Pagamento;
+SELECT * FROM Item_Pedido;
+
+
+
+
+-- 1. Produtos + categoria
+SELECT P.Nome_Produto, P.Preco, C.Nome_Categoria
+FROM Produto P
+JOIN Categoria C ON P.ID_Categoria = C.ID_Categoria;
+
+-- 2. Pedidos + nome do cliente
+SELECT Pe.ID_Pedido, C.Nome, Pe.Data_Pedido, Pe.Valor_Total
+FROM Pedido Pe
+JOIN Cliente C ON Pe.ID_Cliente = C.ID_Cliente;
+
+-- 3. Itens detalhados do pedido
+SELECT Cli.Nome, Pro.Nome_Produto, IP.Quantidade, IP.Subtotal
+FROM Item_Pedido IP
+JOIN Pedido Ped ON IP.ID_Pedido = Ped.ID_Pedido
+JOIN Produto Pro ON IP.ID_Produto = Pro.ID_Produto
+JOIN Cliente Cli ON Ped.ID_Cliente = Cli.ID_Cliente;
+
+-- 4. Produtos acima de R$200
+SELECT Nome_Produto, Preco
+FROM Produto
+WHERE Preco > 200;
+
+-- 5. Top 3 produtos mais caros
+SELECT TOP 3 Nome_Produto, Preco
+FROM Produto
+ORDER BY Preco DESC;
+
+
+
+
+-- 1. Atualizar o preço de um produto
+UPDATE Produto
+SET Preco = 89.90
+WHERE ID_Produto = 1;
+
+-- 2. Reduzir estoque de um produto (simulando venda)
+UPDATE Produto
+SET Estoque = Estoque - 1
+WHERE ID_Produto = 3;
+
+-- 3. Alterar status de um pagamento
+UPDATE Pagamento
+SET Status = 'Estornado'
+WHERE ID_Pagamento = 1;
+
+
+
+
+-- 1. Remover um item específico do pedido 1
+DELETE FROM Item_Pedido
+WHERE ID_Pedido = 1 AND ID_Produto = 2;
+
+-- 2. Remover um cliente sem pedidos
+DELETE FROM Cliente
+WHERE ID_Cliente = 3;
+
+-- 3. Remover categoria que não possui produtos relacionados
+DELETE FROM Produto
+WHERE ID_Produto = 4;
+
+
