@@ -1,3 +1,59 @@
+CREATE DATABASE TechStore;
+GO
+
+USE TechStore;
+GO
+
+CREATE TABLE Categoria (
+    ID_Categoria INT IDENTITY(1,1) PRIMARY KEY,
+    Nome_Categoria VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE Produto (
+    ID_Produto INT IDENTITY(1,1) PRIMARY KEY,
+    Nome_Produto VARCHAR(100) NOT NULL,
+    Preco DECIMAL(10,2) NOT NULL,
+    Estoque INT NOT NULL,
+    ID_Categoria INT,
+    FOREIGN KEY (ID_Categoria) REFERENCES Categoria(ID_Categoria)
+);
+
+CREATE TABLE Cliente (
+    ID_Cliente INT IDENTITY(1,1) PRIMARY KEY,
+    Nome VARCHAR(100) NOT NULL,
+    Email VARCHAR(100) NOT NULL UNIQUE,
+    Telefone VARCHAR(20)
+);
+
+CREATE TABLE Pedido (
+    ID_Pedido INT IDENTITY(1,1) PRIMARY KEY,
+    ID_Cliente INT NOT NULL,
+    Data_Pedido DATE NOT NULL,
+    Valor_Total DECIMAL(10,2),
+    FOREIGN KEY (ID_Cliente) REFERENCES Cliente(ID_Cliente)
+);
+
+CREATE TABLE Pagamento (
+    ID_Pagamento INT IDENTITY(1,1) PRIMARY KEY,
+    ID_Pedido INT NOT NULL,
+    Tipo VARCHAR(30),
+    Status VARCHAR(30),
+    FOREIGN KEY (ID_Pedido) REFERENCES Pedido(ID_Pedido)
+);
+
+CREATE TABLE Item_Pedido (
+    ID_Pedido INT NOT NULL,
+    ID_Produto INT NOT NULL,
+    Quantidade INT NOT NULL,
+    Subtotal DECIMAL(10,2),
+    PRIMARY KEY (ID_Pedido, ID_Produto),
+    FOREIGN KEY (ID_Pedido) REFERENCES Pedido(ID_Pedido),
+    FOREIGN KEY (ID_Produto) REFERENCES Produto(ID_Produto)
+);
+
+
+
+
 USE TechStore;
 GO
 INSERT INTO Categoria (Nome_Categoria) VALUES
